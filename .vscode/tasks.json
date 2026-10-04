@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SonarQube: Run Analysis",
+      "type": "shell",
+      "command": "[ -f .env ] && set -a && . ./.env && set +a; ./mvnw clean test sonar:sonar -Dsonar.projectKey=\"${SONAR_PROJECT_KEY:-similarproducts}\" -Dsonar.host.url=\"${SONAR_HOST_URL:-http://localhost:9000}\" -Dsonar.token=\"$SONAR_TOKEN\"",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "clear": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

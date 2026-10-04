@@ -10,25 +10,25 @@ import org.springframework.stereotype.Service;
 
 import com.giovanni.similarproducts.converter.ProductConverter;
 import com.giovanni.similarproducts.dto.ProductDetailResponseDto;
-import com.giovanni.similarproducts.service.ExternalProductService;
+import com.giovanni.similarproducts.service.ProductCacheService;
 import com.giovanni.similarproducts.service.SimilarProductsService;
 
 @Service
 public class SimilarProductsServiceImpl implements SimilarProductsService {
 
-    private final ExternalProductService externalProductService;
+    private final ProductCacheService productCacheService;
     private final ProductConverter productConverter;
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
-    public SimilarProductsServiceImpl(ExternalProductService externalProductService,
+    public SimilarProductsServiceImpl(ProductCacheService productCacheService,
             ProductConverter productConverter) {
-        this.externalProductService = externalProductService;
+        this.productCacheService = productCacheService;
         this.productConverter = productConverter;
     }
 
     @Override
     public List<ProductDetailResponseDto> getSimilarProducts(String productId) {
-        List<Object> ids = externalProductService.getSimilarIds(productId);
+        List<Object> ids = productCacheService.getSimilarIds(productId);
         if (ids == null) {
             return List.of();
         }
@@ -55,7 +55,7 @@ public class SimilarProductsServiceImpl implements SimilarProductsService {
 
     private ProductDetailResponseDto fetchProduct(String id) {
         try {
-            return productConverter.toDto(externalProductService.getProduct(id));
+            return productConverter.toDto(productCacheService.getProduct(id));
         } catch (RuntimeException e) {
             return null;
         }

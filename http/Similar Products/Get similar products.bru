@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{host}}/product/{{productId}}/similar
+  url: {{host}}/product/:productId/similar
   body: none
   auth: none
+}
+
+params:path {
+  productId: 1
 }

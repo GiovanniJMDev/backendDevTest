@@ -1,0 +1,15 @@
+meta {
+  name: Get Product Detail
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{mocksHost}}/product/:productId
+  body: none
+  auth: none
+}
+
+params:path {
+  productId: 1
+}

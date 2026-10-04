@@ -22,6 +22,7 @@ public class ProductCacheServiceImpl implements ProductCacheService {
     private static final long MAX_ENTRIES = 10_000;
 
     private final ExternalProductService externalProductService;
+    private final boolean enabled;
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     private final AsyncCache<String, List<Object>> similarIdsCache;
     private final AsyncCache<String, ExternalDataDto> productCache;
@@ -29,17 +30,24 @@ public class ProductCacheServiceImpl implements ProductCacheService {
     public ProductCacheServiceImpl(ExternalProductService externalProductService,
             @Value("${products.cache.ttl}") Duration ttl) {
         this.externalProductService = externalProductService;
+        this.enabled = !ttl.isZero();
         this.similarIdsCache = newCache(ttl);
         this.productCache = newCache(ttl);
     }
 
     @Override
     public List<Object> getSimilarIds(String productId) {
+        if (!enabled) {
+            return externalProductService.getSimilarIds(productId);
+        }
         return await(similarIdsCache.get(productId, externalProductService::getSimilarIds));
     }
 
     @Override
     public ExternalDataDto getProduct(String productId) {
+        if (!enabled) {
+            return externalProductService.getProduct(productId);
+        }
         return await(productCache.get(productId, externalProductService::getProduct));
     }
 

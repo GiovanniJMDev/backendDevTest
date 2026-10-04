@@ -35,7 +35,7 @@ public class ExternalProductServiceImpl implements ExternalProductService {
                 .uri(uri, productId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .onStatus(ExternalApiErrorUtil::isNotFound, ExternalApiErrorUtil::throwNotFound)
+                .onStatus(ExternalApiErrorUtil::isNotFound, (request, response) -> ExternalApiErrorUtil.throwNotFound(request))
                 .body(type);
     }
 }

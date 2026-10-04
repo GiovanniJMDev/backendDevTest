@@ -1,0 +1,11 @@
+meta {
+  name: Get Similar Products
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/product/{{productId}}/similar
+  body: none
+  auth: none
+}
